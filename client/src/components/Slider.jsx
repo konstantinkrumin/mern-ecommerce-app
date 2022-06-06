@@ -97,7 +97,7 @@ const Slider = () => {
 			<Wrapper slideIndex={slideIndex}>
 				{sliderItems.map(item => {
 					return (
-						<Slide bg={item.bg}>
+						<Slide bg={item.bg} key={item.id}>
 							<ImgContainer>
 								<Image src={item.img} />
 							</ImgContainer>

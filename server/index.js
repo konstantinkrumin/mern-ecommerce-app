@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 
+const authRoute = require('./routes/auth');
 const userRoute = require('./routes/user');
 
 mongoose
@@ -18,6 +19,7 @@ app.get('/api/healthcheck', () => {
 	console.log('server is working!');
 });
 
+app.use('/api/auth', authRoute);
 app.use('/api/users', userRoute);
 
 app.listen(process.env.PORT || 5000, () => {

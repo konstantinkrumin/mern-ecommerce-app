@@ -1,10 +1,14 @@
 import styled from 'styled-components';
+import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Add, Remove } from '@material-ui/icons';
-import Announcement from '../components/Announcement';
-import Navbar from '../components/Navbar';
-import Newsletter from '../components/Newsletter';
-import Footer from '../components/Footer';
 
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
+import Newsletter from '../components/Newsletter';
+import Announcement from '../components/Announcement';
+
+import { publicRequest } from '../requestMethods';
 import { mobile } from '../responsive';
 
 const Container = styled.div``;
@@ -133,47 +137,74 @@ const Button = styled.button`
 `;
 
 const Product = () => {
+	const location = useLocation();
+	const id = location.pathname.split('/')[2];
+
+	const [product, setProduct] = useState({});
+	const [quantity, setQuantity] = useState(1);
+	const [color, setColor] = useState(null);
+	const [size, setSize] = useState(null);
+
+	useEffect(() => {
+		const getProduct = async () => {
+			try {
+				const res = await publicRequest.get(`/products/find/${id}`);
+				setProduct(res.data);
+			} catch (err) {
+				console.log(err);
+			}
+		};
+
+		getProduct();
+	}, [id]);
+
+	const handleQuantity = async type => {
+		if (type === 'dec') {
+			quantity > 1 && setQuantity(quantity - 1);
+		} else {
+			setQuantity(quantity + 1);
+		}
+	};
+
+	const handleClick = () => {
+		// Update cart
+	};
+
 	return (
 		<Container>
 			<Announcement />
 			<Navbar />
 			<Wrapper>
 				<ImgContainer>
-					<Image src="https://i.ibb.co/S6qMxwr/jean.jpg" />
+					<Image src={product.img} />
 				</ImgContainer>
 				<InfoContainer>
-					<Title>Denim Jumpsuit</Title>
-					<Description>
-						Extremely durable and comforable piece made of 98% cotton and 2% elastine.
-						It definitely would a nice addition for your summer wardrobe to wear on some
-						nice evening walks.
-					</Description>
-					<Price>$ 200</Price>
+					<Title>{product.title}</Title>
+					<Description>{product.desc}</Description>
+					<Price>$ {product.price}</Price>
 					<FilterContainer>
 						<Filter>
 							<FilterTitle>Color</FilterTitle>
-							<FilterColor color="black" />
-							<FilterColor color="darkblue" />
-							<FilterColor color="gray" />
+							{product?.color?.map(c => (
+								<FilterColor color={c} key={c} onClick={c => setColor(c)} />
+							))}
 						</Filter>
 						<Filter>
 							<FilterTitle>Size</FilterTitle>
-							<FilterSize>
-								<FilterSizeOption>XS</FilterSizeOption>
-								<FilterSizeOption>S</FilterSizeOption>
-								<FilterSizeOption>M</FilterSizeOption>
-								<FilterSizeOption>L</FilterSizeOption>
-								<FilterSizeOption>XL</FilterSizeOption>
+							<FilterSize onChange={e => setSize(e.target.value)}>
+								{product?.size?.map(s => (
+									<FilterSizeOption key={s}>{s}</FilterSizeOption>
+								))}
 							</FilterSize>
 						</Filter>
 					</FilterContainer>
 					<AddContainer>
 						<AmountContainer>
-							<Remove />
-							<Amount>1</Amount>
-							<Add />
+							<Remove onClick={() => handleQuantity('dec')} />
+							<Amount>{quantity}</Amount>
+							<Add onClick={() => handleQuantity('inc')} />
 						</AmountContainer>
-						<Button>ADD TO CART</Button>
+						<Button onClick={handleClick}>ADD TO CART</Button>
 					</AddContainer>
 				</InfoContainer>
 			</Wrapper>

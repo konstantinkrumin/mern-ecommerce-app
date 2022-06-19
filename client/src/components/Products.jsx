@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import axios from 'axios';
 
 import Product from './Product';
+import { publicRequest } from '../requestMethods';
 
 const Container = styled.div`
 	padding: 20px;
@@ -18,14 +18,14 @@ const Products = ({ cat, filters, sort }) => {
 	useEffect(() => {
 		const getProducts = async () => {
 			try {
-				const res = await axios.get(
-					cat
-						? `http://localhost:5000/api/products?category=${cat}`
-						: 'http://localhost:5000/api/products'
+				const res = await publicRequest.get(
+					cat ? `/products?category=${cat}` : '/products'
 				);
 
 				setProducts(res.data);
-			} catch (err) {}
+			} catch (err) {
+				console.log(err);
+			}
 		};
 
 		getProducts();
@@ -49,11 +49,12 @@ const Products = ({ cat, filters, sort }) => {
 			setFilteredProducts(prev => [...prev].sort((a, b) => b.price - a.price));
 		}
 	}, [sort]);
+
 	return (
 		<Container>
-			{filteredProducts.map(item => (
-				<Product item={item} key={item.id} />
-			))}
+			{cat
+				? filteredProducts.map(item => <Product item={item} key={item._id} />)
+				: products.slice(0, 8).map(item => <Product item={item} key={item._id} />)}
 		</Container>
 	);
 };

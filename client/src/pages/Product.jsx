@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { useDispatch } from 'react-redux';
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Add, Remove } from '@material-ui/icons';
@@ -10,6 +11,7 @@ import Announcement from '../components/Announcement';
 
 import { publicRequest } from '../requestMethods';
 import { mobile } from '../responsive';
+import { addProduct } from '../redux/cartRedux';
 
 const Container = styled.div``;
 
@@ -145,6 +147,8 @@ const Product = () => {
 	const [color, setColor] = useState(null);
 	const [size, setSize] = useState(null);
 
+	const dispatch = useDispatch();
+
 	useEffect(() => {
 		const getProduct = async () => {
 			try {
@@ -168,6 +172,14 @@ const Product = () => {
 
 	const handleClick = () => {
 		// Update cart
+		dispatch(
+			addProduct({
+				...product,
+				quantity,
+				color,
+				size
+			})
+		);
 	};
 
 	return (

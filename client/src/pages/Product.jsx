@@ -11,7 +11,7 @@ import Announcement from '../components/Announcement';
 
 import { publicRequest } from '../requestMethods';
 import { mobile } from '../responsive';
-import { addProduct } from '../redux/cartRedux';
+import { addProduct } from '../redux/cartSlice';
 
 const Container = styled.div``;
 

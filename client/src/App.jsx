@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 import Home from './pages/Home';
 import Product from './pages/Product';
@@ -9,7 +10,7 @@ import Cart from './pages/Cart';
 import Success from './pages/Success';
 
 const App = () => {
-	const user = true;
+	const user = useSelector(state => state.user.currentUser);
 
 	return (
 		<Router>

@@ -1,6 +1,6 @@
 import './productList.css';
 
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { DataGrid } from '@material-ui/data-grid';
@@ -9,8 +9,6 @@ import { DeleteOutline } from '@material-ui/icons';
 import { deleteProduct, getProducts } from '../../redux/apiCalls';
 
 export default function ProductList() {
-	const [data, setData] = useState([]);
-
 	const dispatch = useDispatch();
 
 	const products = useSelector(state => state.product.products);

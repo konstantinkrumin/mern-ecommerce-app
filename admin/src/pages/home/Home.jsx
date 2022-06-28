@@ -9,8 +9,6 @@ import FeaturedInfo from '../../components/featuredInfo/FeaturedInfo';
 
 import { userRequest } from '../../requestMethods';
 
-import { userData } from '../../dummyData';
-
 export default function Home() {
 	const [userStats, setUserStats] = useState([]);
 
